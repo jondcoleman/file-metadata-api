@@ -1,13 +1,25 @@
 'use strict';
 var express = require('express');
 var routes = require('./app/index.js');
+var bodyParser = require('body-parser');
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
 
 var app = express();
 require('dotenv').load();
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
-routes(app);
+
+
+ app.get('/', function (req, res) {
+       res.sendFile(process.cwd() + '/public/index.html');
+    });
+
+app.post('/upload', upload.single('file'), function(req, res) {
+    console.log(req.file);
+    res.send('done');
+  });
 
 app.listen(process.env.PORT || 3000, function () {
   console.log('Node.js listening on port 3000...');
